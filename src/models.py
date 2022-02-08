@@ -17,3 +17,25 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String(200), nullable=False)
+    done = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return '<Todo %r>' % self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "label": self.label,
+            "done": self.done,
+        }
+
+    def get_todos(self):
+        todos = db.session.query(Todo)
+        list_todo = []
+        for todo in todos:
+            list_todo.append(todo.serialize())
+        return list_todo
